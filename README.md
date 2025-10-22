@@ -66,9 +66,49 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
 
 6. **Deploy and Access**:
    - Wait for containers to start (first launch may take several minutes)
-   - Access VSCode via port 80 (HTTP)
+   - **Set up Secure Links** (see section below)
+   - Access VSCode via secure link
    - Run Kit App: `./start-kit-app.sh`
-   - Access 3D viewport via `/viewer` endpoint
+   - Access 3D viewport via WebRTC streaming
+
+## 🔗 Setting Up Secure Links for BREV Access
+
+### **Why You Need Secure Links:**
+- BREV protects HTTP services with authentication
+- Direct IP access (like `http://35.202.104.93:80`) is blocked for security
+- Secure links provide authenticated access to your services
+
+### **How to Create Secure Links:**
+
+1. **Click "Share a Service"** button in the BREV interface
+2. **Configure the service**:
+   - **Port**: `80` (for VSCode Server)
+   - **Service Name**: `vscode-server` (or any name you prefer)
+   - **Description**: `VSCode development environment`
+3. **Create additional secure links for other services**:
+   - **Port 1024**: For WebRTC signaling/viewer
+   - **Port 49100**: For Kit App WebRTC
+   - **Port 47998**: For WebRTC streaming
+
+### **Step-by-Step Process:**
+1. **In BREV interface**: Click the green "Share a Service" button
+2. **Fill in the details**:
+   - Port: `80`
+   - Name: `Kit App VSCode`
+   - Description: `Development environment for Kit App 108.1`
+3. **Click "Create"** or "Share"
+4. **Copy the generated secure URL** (it will look like `https://brev.dev/...`)
+
+### **Expected Result:**
+You'll get secure URLs like:
+- `https://vscode-server-s6qw18j1s.brevlab.com` (for VSCode)
+- `https://webrtc-viewer-s6qw18j1s.brevlab.com` (for WebRTC streaming)
+
+These URLs will:
+- ✅ **Authenticate you** automatically
+- ✅ **Provide access** to your services
+- ✅ **Allow sharing** with team members
+- ✅ **Work from anywhere** (no VPN needed)
 
 ## 🛠️ Local Development
 
