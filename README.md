@@ -1,10 +1,10 @@
 # Omniverse Kit App 108.1 Launchable
 
-A cloud-based USD authoring environment using Omniverse Kit 2025.1.0 with Kit App 108.1 and WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
+A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Omniverse Kit) with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
 ## 🚀 Features
 
-- **Omniverse Kit 2025.1.0**: Full USD Composer functionality with Kit App 108.1
+- **Isaac Sim 5.0.0**: Includes Omniverse Kit with USD Composer functionality
 - **WebRTC Streaming**: Browser-based access to the 3D viewport
 - **Cloud GPU**: T4 GPU minimum for RTX rendering
 - **Custom Configuration**: Includes jph2_company.jph2_usd_composer setup
@@ -139,7 +139,7 @@ Before deploying to BREV, ensure:
 
 - [ ] **Ports exposed**: 80, 1024, 49100, 47998 (critical: 1024 for WebRTC signaling)
 - [ ] **GPU instance**: T4 minimum with RT cores (avoid Crusoe, use AWS)
-- [ ] **Container image**: Uses `nvcr.io/nvidia/omniverse/kit:2025.1.0` (Kit 108.1)
+- [ ] **Container image**: Uses `nvcr.io/nvidia/isaac-sim:5.0.0` (includes Omniverse Kit)
 - [ ] **EULA accepted**: `ACCEPT_EULA=Y` environment variable set
 - [ ] **WebRTC enabled**: `--no-window --enable omni.kit.livestream.webrtc` in startup
 - [ ] **NVIDIA runtime**: GPU capabilities properly configured in docker-compose.yml
