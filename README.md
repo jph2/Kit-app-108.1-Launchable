@@ -6,14 +6,14 @@ A cloud-based USD authoring environment using Omniverse Kit App 108.1 with WebRT
 
 - **Omniverse Kit App 108.1**: Full USD Composer functionality with custom extensions
 - **WebRTC Streaming**: Browser-based access to the 3D viewport
-- **Cloud GPU**: L40S GPU support for RTX rendering
+- **Cloud GPU**: T4 GPU minimum for RTX rendering
 - **Custom Configuration**: Includes jph2_company.jph2_usd_composer setup
 - **Docker Containerized**: Complete containerization for easy deployment
 
 ## 📋 Prerequisites
 
 - NVIDIA BREV account
-- GPU instance with RT cores (L40S recommended)
+- GPU instance with RT cores (T4 minimum)
 - Docker and Docker Compose (for local testing)
 
 ## 🚀 Quick Start
@@ -103,7 +103,7 @@ Kit-app-108.1-Launchable/
 ### GPU Requirements
 - NVIDIA GPU with RT cores
 - CUDA 12.9+ compatible driver
-- L40S recommended for optimal performance
+- T4 minimum for RTX rendering
 
 ## 🔧 Customization
 

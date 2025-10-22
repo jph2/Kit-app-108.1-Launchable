@@ -8,9 +8,9 @@ launchable:
   author: "jph2_company"
 
 compute:
-  gpu_type: "L40S"  # Recommended for RTX rendering
-  cpu_cores: 8
-  memory_gb: 32
+  gpu_type: "T4"  # Minimum GPU for RTX rendering
+  cpu_cores: 4
+  memory_gb: 16
   disk_gb: 100
 
 container:
