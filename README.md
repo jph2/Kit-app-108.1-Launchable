@@ -24,7 +24,8 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - Go to [brev.nvidia.com](https://brev.nvidia.com)
    - Select "Create Launchable"
    - Choose "I have code files" option
-   - Connect this GitHub repository
+   - Connect this GitHub repository: `https://github.com/jph2/Kit-app-108.1-Launchable`
+   - **Select "With container(s)"** for runtime environment (required for Docker Compose)
 
 2. **Configure Instance**:
    - **GPU Type**: T4 (minimum for RTX rendering)
@@ -137,6 +138,8 @@ Edit `kit-app-108/start-kit-app.sh`:
 
 Before deploying to BREV, ensure:
 
+- [ ] **Runtime environment**: Select "With container(s)" (not VM Mode)
+- [ ] **Repository URL**: `https://github.com/jph2/Kit-app-108.1-Launchable`
 - [ ] **Ports exposed**: 80, 1024, 49100, 47998 (critical: 1024 for WebRTC signaling)
 - [ ] **GPU instance**: T4 minimum with RT cores (avoid Crusoe, use AWS)
 - [ ] **Container image**: Uses `nvcr.io/nvidia/isaac-sim:5.0.0` (includes Omniverse Kit)
@@ -144,6 +147,13 @@ Before deploying to BREV, ensure:
 - [ ] **WebRTC enabled**: `--no-window --enable omni.kit.livestream.webrtc` in startup
 - [ ] **NVIDIA runtime**: GPU capabilities properly configured in docker-compose.yml
 - [ ] **Viewer access**: Use `/viewer` endpoint after Kit App starts
+
+### Why "With container(s)" is Required:
+- **Docker Compose**: Your setup uses `docker-compose.yml` with multiple services
+- **Isaac Sim container**: Needs `nvcr.io/nvidia/isaac-sim:5.0.0` container runtime
+- **GPU access**: Requires NVIDIA Container Toolkit for GPU-accelerated rendering
+- **Multi-service architecture**: nginx + web-viewer + Kit App work together
+- **VM Mode limitation**: Only provides "Basic VM with Python" - insufficient for this setup
 
 ## 🐛 Troubleshooting
 
