@@ -27,9 +27,9 @@ A cloud-based USD authoring environment using Omniverse Kit App 108.1 with WebRT
    - Connect this GitHub repository
 
 2. **Configure Instance**:
-   - **GPU Type**: L40S (recommended for RTX rendering)
-   - **CPU Cores**: 8
-   - **Memory**: 32GB
+   - **GPU Type**: T4 (minimum for RTX rendering)
+   - **CPU Cores**: 4
+   - **Memory**: 16GB
    - **Disk**: 100GB
 
 3. **Expose Ports**:
