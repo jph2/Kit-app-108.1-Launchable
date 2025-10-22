@@ -1,174 +1,188 @@
-![Example usage of Isaac Launchable](images/IsaacLaunchableDemo_GitHub_wide.gif)
+# Omniverse Kit App 108.1 Launchable
 
-# Isaac Launchable
+A cloud-based USD authoring environment using Omniverse Kit App 108.1 with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
-Isaac Launchable offers a simplified approach to installing and using [Isaac Lab](https://isaac-sim.github.io/IsaacLab/main/index.html) and [Isaac Sim](https://github.com/isaac-sim/IsaacSim).
+## 🚀 Features
 
-Through this project, users can interact with Isaac Sim and Isaac Lab purely from a web browser, with one tab running Visual Studio Code for development and command execution, and another tab providing the streamed user interface for Isaac Sim.
+- **Omniverse Kit App 108.1**: Full USD Composer functionality with custom extensions
+- **WebRTC Streaming**: Browser-based access to the 3D viewport
+- **Cloud GPU**: L40S GPU support for RTX rendering
+- **Custom Configuration**: Includes jph2_company.jph2_usd_composer setup
+- **Docker Containerized**: Complete containerization for easy deployment
 
-Launchables are provided by [NVIDIA Brev](https://developer.nvidia.com/brev), using this repo as a template. Launchables are preconfigured, fully optimized compute and software environments. They allow users to start projects without extensive setup or configuration.
+## 📋 Prerequisites
 
-Isaac Lab is built upon Isaac Sim, the NVIDIA simulation framework for robotics. Isaac Sim can both be launched alone, or from the context of Isaac Lab to enable robot learning.
+- NVIDIA BREV account
+- GPU instance with RT cores (L40S recommended)
+- Docker and Docker Compose (for local testing)
 
-## What this project contains
-The installation steps for Isaac Lab are automated via Docker, such that it can be used locally, or be deployed on services such as NVIDIA Brev and run with cloud resources.
+## 🚀 Quick Start
 
-The project includes:
-- a Visual Studio Code container
-- Isaac Lab pre-installed
-- Isaac Sim pre-installed
-- an Omniverse Kit App Streaming client, based on the [web-viewer-sample](https://github.com/NVIDIA-Omniverse/web-viewer-sample) project.
+### Deploy on BREV
 
-## Quickstart Guide
-This guide will get you started with a Visual Studio Code instance with Isaac Lab preinstalled, and an in-browser user interface provided by Kit App Streaming.
+1. **Create BREV Launchable**:
+   - Go to [brev.nvidia.com](https://brev.nvidia.com)
+   - Select "Create Launchable"
+   - Choose "I have code files" option
+   - Connect this GitHub repository
 
-> [!NOTE]
-> Please note that Brev instances are pay-by-the hour. To make the best use of credits, stop instances when they are not in use. Stopped instances have a smaller storage charge.
+2. **Configure Instance**:
+   - **GPU Type**: L40S (recommended for RTX rendering)
+   - **CPU Cores**: 8
+   - **Memory**: 32GB
+   - **Disk**: 100GB
 
-### Deploy
-1. Click this Deploy Now button
-[![ Click here to deploy.](https://brev-assets.s3.us-west-1.amazonaws.com/nv-lb-dark.svg)](https://brev.nvidia.com/launchable/deploy?launchableID=env-31ezDWyp4LvtDQr5rUhAWOUMFhn)
-2. Click the Deploy Launchable button to spin up the instance.
-3. Wait for the instance to be fully ready on Brev: running, built, and the setup script has completed (first launch can take a while)
-4. On the Brev instance page, scroll to the TCP/UDP ports section.
-5. Click the link for port 80 (HTTP) to open Visual Studio Code Server.
-6. The default password is `password`. This can be modified.
-7. Inside Visual Studio Code, continue with the [README.md](https://github.com/isaac-sim/isaac-launchable/blob/main/isaac-lab/vscode/README.md) instructions. A summary is provided below.
-8. Now you're in the Visual Studio Code dev environment! 
+3. **Expose Ports**:
+   - Port 80 (VSCode Server)
+   - Port 49100 (Kit App WebRTC)
+   - Port 47998 (WebRTC streaming)
+   - Port 8080 (Additional web interface)
 
-### Running Isaac Sim and Isaac Lab - the quick version
-In short, the commands to run Isaac Lab and Isaac Sim are similar to workstation installs, except when you need the UI. Then we add a few arguments for streaming to the normal commands.
+4. **Deploy and Access**:
+   - Wait for containers to start (first launch may take several minutes)
+   - Access VSCode via port 80 (HTTP)
+   - Run Kit App: `./start-kit-app.sh`
+   - Access 3D viewport via `/viewer` endpoint
 
-The top-level README.md file in the dev environment contains a shortened version of the instructions below.
+## 🛠️ Local Development
 
-
-## Detailed Guides
-
-### Running Isaac Sim - Detailed Guide
-
-1. Run the following command: 
-```
-./isaaclab/_isaac_sim/isaac-sim.sh --no-window --enable omni.kit.livestream.webrtc
-```
-Note how this is similar to the workstation command for launching Isaac Sim, but uses additional arguments for streaming.
-
-2. Wait for application to be ready. Look for the `app ready` message in the console.
-3. Open a new browser tab to view the UI.
-4. In this tab, paste the same address as the Visual Studio Code server, changing the end of the URL to: `/viewer`
-- Example: if VSCode is at `ec2.something.amazonaws.com`, then the Isaac Sim UI can be accessed at `ec2.something.amazonaws.com/viewer`
-5. After a few seconds you should see the UI in the viewer tab. The first launch may take much longer as shaders are cached.
-6. On subsequent relaunches, simply refresh this tab to see the UI.
-
-
-### Running Isaac Lab Commands - Detailed Guide
-To run an Isaac Lab command, first consider if it requires the UI. If it doesn't, such as during policy training, simply run the command as normal.
-
-If you need to see the Isaac Sim UI, just append these additional arguments to the Isaac Lab command: `--kit_args="--no-window --enable omni.kit.livestream.webrtc"`.
-
-Let's try out the Ant walking task as a demo. We chose this task because it trains quickly.
-
-1. Run this command to begin headless training without a viewport: 
-```
-python isaaclab/scripts/reinforcement_learning/skrl/train.py --task=Isaac-Ant-v0 --headless
-``` 
-This is essentially the same command you would run for a workstation install of Isaac Lab.
-
-2. Once the training script is complete, test the policy behavior by running: 
-```
-python isaaclab/scripts/reinforcement_learning/skrl/play.py --task=Isaac-Ant-v0 --kit_args="--no-window --enable omni.kit.livestream.webrtc"
-``` 
-This will launch Isaac Sim. Note how we added the `--kit_args` since we'll want to view the behavior using the Isaac Sim viewport.
-
-3. Wait for application to be ready. 
-- Look for a message saying `Simulation App Startup Complete` in the console.
-
-4. Open a new tab in your browser, if you don't have a viewer tab yet.
-- Example: if VSCode is hosted at `ec2.something.amazonaws.com`, then the Isaac Sim UI can be accessed at `ec2.something.amazonaws.com/viewer` - note the `/viewer` addition.
-> [!NOTE]
-> If you already have a viewer tab open, simply refresh it when the app is ready.
-5. Wait a few seconds for the stream to start. The first launch may take much longer as shaders are cached.
-6. To stop the process, press **CTRL+C** in the terminal.
-
-> [!IMPORTANT]
-> This setup is only intended to be used with one viewer instance. Please only keep one viewer tab open at a time for best results.
-
-
-### Demos
-If you're new to Isaac Lab, here are some ideas to try:
-- Run the [Showroom Demos](https://isaac-sim.github.io/IsaacLab/main/source/overview/showroom.html) from Isaac Lab.
-- Take the introductory Isaac Lab courses: "Train Your First Robot With Isaac Lab" and "Train your Second Robot With Isaac Lab" available [here](https://www.nvidia.com/en-us/learn/learning-path/robotics/)
-- Explore the Isaac Lab [Walkthrough](https://isaac-sim.github.io/IsaacLab/main/source/setup/walkthrough/index.html)
-
-## Creating Your Own Launchable
-
-If you'd like a Launchable with more compute, or other custom features, you can fork this repo and / or use this repo but configure a custom Launchable for your projects.
-
-#### Configuring a Custom Brev Launchable
-
-These instructions describe how to create a customized Launchable, similar to the one linked at the beginning of this guide.
-
-1. Log in to the [Brev](https://login.brev.nvidia.com/signin) website.
-2. Go to the Launchables category.
-3. Click the **Create Launchable** button.
-4. Choose the "I don't have any code files" option.
-5. Choose **VM Mode - Basic VM with Python installed**, then click Next.
-6. On the next page, add a setup script. Under the *Paste Script* tab, add this code:
+### Setup
 ```bash
-#!/bin/bash
-git clone https://github.com/isaac-sim/isaac-launchable
-cd isaac-launchable/isaac-lab
-docker compose up -d
+git clone https://github.com/jph2/Kit-app-108.1-Launchable.git
+cd Kit-app-108.1-Launchable/kit-app-108
+chmod +x start-kit-app.sh
 ```
-7. Click Next.
-8. Under "Do you want a Jupyter Notebook experience" select "No, I don't want Jupyter".
-9. Select the TCP/UDP ports tab.
-10. Expose the following ports (for Visual Studio Code Server and Kit App Streaming). You can choose to limit these ports to be accessible only from certain IPs as well.
+
+### Run Locally
+```bash
+# Build and start containers
+docker-compose up -d
+
+# Launch Kit App with streaming
+./start-kit-app.sh
 ```
-80
-1024
-47998
-49100
+
+### Validate Configuration
+```bash
+# Run validation script
+powershell -ExecutionPolicy Bypass -File validate-config.ps1
 ```
-11. Click Next.
-12. Choose your desired compute.
 
-> [!NOTE]
-> GPUs with RT cores are required for Kit App Streaming. 
-> The compute specs and driver versions provided also need to be compatible with [Isaac Sim](https://docs.isaacsim.omniverse.nvidia.com/5.0.0/installation/requirements.html). The available drivers are not exposed on this Brev page currently.
+## 📁 Repository Structure
 
-> [!IMPORTANT]
-> The project is not currently compatible with Crusoe instances. AWS has been tested and is used for the example launchable.
-13. Choose disk storage, then click Next.
-14. Enter a name, then select **Create Launchable**
+```
+Kit-app-108.1-Launchable/
+├── kit-app-108/                 # Main launchable configuration
+│   ├── docker-compose.yml       # Container orchestration
+│   ├── docker-compose.override.yml
+│   ├── start-kit-app.sh         # Startup script with WebRTC
+│   ├── deployment.yml           # BREV deployment config
+│   ├── validate-config.ps1      # PowerShell validation
+│   ├── validate-config.sh       # Bash validation
+│   ├── README.md               # Usage documentation
+│   ├── nginx/                  # Reverse proxy configuration
+│   └── web-viewer-sample/      # Web streaming interface
+├── isaac-sim/                  # Original Isaac Sim configuration
+├── isaac-lab/                  # Original Isaac Lab configuration
+└── README.md                   # This file
+```
 
-Congratulations! You now have a custom launchable.
+## ⚙️ Configuration
 
-## Using This Project Locally
+### Environment Variables
+- `OMNIVERSE_KIT_APP=jph2_company.jph2_usd_composer`
+- `ACCEPT_EULA=Y`
+- `KIT_EXTENSIONS_PATH=/workspace/extensions`
 
-This project can also be used to run a containerized version of Isaac Sim and Isaac Lab.
+### Ports
+- **80**: VSCode Server
+- **49100**: Kit App WebRTC server
+- **47998**: WebRTC streaming endpoint
+- **8080**: Additional web interface
 
-To use this project locally, you'll need a workstation that meets [Isaac Sim](https://docs.isaacsim.omniverse.nvidia.com/5.0.0/installation/requirements.html)'s requirements.
+### GPU Requirements
+- NVIDIA GPU with RT cores
+- CUDA 12.9+ compatible driver
+- L40S recommended for optimal performance
 
+## 🔧 Customization
 
-1. Install the NVIDIA Container Toolkit: `sudo install nvidia-container-toolkit`
-2. Inside [this docker-compose file](https://github.com/isaac-sim/isaac-launchable/blob/main/isaac-lab/docker-compose.yml), change the `ENV=brev` line to `ENV=localhost`.
-3. Inside the folder `isaac-lab`, run `docker compose up -d`.
-4. Access the VSCode instance via `localhost`.
+### Modify Kit App Configuration
+Edit `kit-app-108/docker-compose.yml`:
+```yaml
+environment:
+  - OMNIVERSE_KIT_APP=your_custom_app
+  - KIT_EXTENSIONS_PATH=/workspace/extensions
+```
 
-## Troubleshooting
-If you run into issues or can't make the web viewer connect, the first thing to check is that all containers are running.
-If using Brev, view your GPU Instance page and find the command to open a terminal on your instance.
-Once you have a terminal to the instance running the containers, run `docker ps` and note if the following containers are running:
-- isaac-lab-nginx
-- isaac-lab-vscode
-- isaac-lab-viewer
+### Add Custom Extensions
+Mount your extensions in the `shared` volume:
+```yaml
+volumes:
+  - shared:/workspace:rw
+```
 
-To restart the containers:
-1. From the terminal connected to your Brev instance, run `docker compose down`
-2. Now run `docker compose up -d`
-3. Confirm containers mentioned above are all running using `docker ps`
+### Modify Streaming Configuration
+Edit `kit-app-108/start-kit-app.sh`:
+```bash
+/opt/omniverse/kit/kit \
+    --app=${OMNIVERSE_KIT_APP} \
+    --no-window \
+    --enable omni.kit.livestream.webrtc \
+    --port=49100 \
+    --webrtc-port=47998
+```
 
+## 🐛 Troubleshooting
 
-## Licensing Terms
+### Common Issues
 
-By clicking the "Deploy Launchable" button, you agree to the NVIDIA Isaac Sim Additional Software and Materials License Agreement found here https://www.nvidia.com/en-us/agreements/enterprise-software/isaac-sim-additional-software-and-materials-license/.
+**Containers not starting**:
+```bash
+docker-compose ps
+docker-compose logs
+```
+
+**WebRTC streaming not working**:
+- Check ports 49100 and 47998 are exposed
+- Verify GPU is available: `nvidia-smi`
+- Check Kit App logs for startup errors
+
+**Authentication issues**:
+- BREV handles authentication automatically
+- For local testing, ensure Docker is logged in to NVIDIA NGC
+
+### Validation
+Run the validation script to check configuration:
+```bash
+powershell -ExecutionPolicy Bypass -File validate-config.ps1
+```
+
+## 📚 Resources
+
+- [NVIDIA BREV Documentation](https://developer.nvidia.com/brev)
+- [Omniverse Kit Documentation](https://docs.omniverse.nvidia.com/kit/)
+- [WebRTC Streaming Guide](https://docs.omniverse.nvidia.com/kit/latest/streaming.html)
+
+## 📄 License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test with validation script
+5. Submit a pull request
+
+## 📞 Support
+
+For issues and questions:
+- Create an issue in this repository
+- Check the [troubleshooting section](#-troubleshooting)
+- Refer to [BREV documentation](https://developer.nvidia.com/brev)
+
+---
+
+**Built with ❤️ for the Omniverse community**
