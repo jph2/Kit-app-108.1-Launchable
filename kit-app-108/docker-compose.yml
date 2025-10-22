@@ -27,7 +27,7 @@ volumes:
 services:
   kit-app-108:
     container_name: kit-app-108
-    image: nvcr.io/nvidia/isaac-sim:5.0.0
+    image: nvcr.io/nvidia/omniverse/kit:2025.1.0
     restart: unless-stopped
     runtime: nvidia
     network_mode: "host"
