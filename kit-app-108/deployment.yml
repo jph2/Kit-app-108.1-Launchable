@@ -14,12 +14,12 @@ compute:
   disk_gb: 100
 
 container:
-  image: "nvcr.io/nvidia/omniverse/kit:2025.1.0"
+  image: "nvcr.io/nvidia/isaac-sim:5.0.0"
   ports:
     - 80      # VSCode Server
+    - 1024    # WebRTC signaling (required for viewer)
     - 49100   # Kit App WebRTC
     - 47998   # WebRTC streaming
-    - 8080    # Additional web interface
 
 environment:
   ACCEPT_EULA: "Y"

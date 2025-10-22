@@ -10,11 +10,9 @@ export ACCEPT_EULA=Y
 export OMNIVERSE_KIT_APP=jph2_company.jph2_usd_composer
 
 # Launch Kit App with streaming enabled
-/opt/omniverse/kit/kit \
-    --app=${OMNIVERSE_KIT_APP} \
+./isaaclab/_isaac_sim/isaac-sim.sh \
     --no-window \
     --enable omni.kit.livestream.webrtc \
-    --enable omni.kit.livestream.webrtc.server \
     --port=49100 \
     --webrtc-port=47998
 

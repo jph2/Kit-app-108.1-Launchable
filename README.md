@@ -1,10 +1,10 @@
 # Omniverse Kit App 108.1 Launchable
 
-A cloud-based USD authoring environment using Omniverse Kit App 108.1 with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
+A cloud-based USD authoring environment using Isaac Sim 5.0.0 with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
 ## 🚀 Features
 
-- **Omniverse Kit App 108.1**: Full USD Composer functionality with custom extensions
+- **Isaac Sim 5.0.0**: Full USD Composer functionality with Kit App streaming
 - **WebRTC Streaming**: Browser-based access to the 3D viewport
 - **Cloud GPU**: T4 GPU minimum for RTX rendering
 - **Custom Configuration**: Includes jph2_company.jph2_usd_composer setup
@@ -34,9 +34,9 @@ A cloud-based USD authoring environment using Omniverse Kit App 108.1 with WebRT
 
 3. **Expose Ports**:
    - Port 80 (VSCode Server)
+   - Port 1024 (WebRTC signaling - required for viewer)
    - Port 49100 (Kit App WebRTC)
    - Port 47998 (WebRTC streaming)
-   - Port 8080 (Additional web interface)
 
 4. **Deploy and Access**:
    - Wait for containers to start (first launch may take several minutes)
@@ -96,9 +96,9 @@ Kit-app-108.1-Launchable/
 
 ### Ports
 - **80**: VSCode Server
+- **1024**: WebRTC signaling (required for viewer)
 - **49100**: Kit App WebRTC server
 - **47998**: WebRTC streaming endpoint
-- **8080**: Additional web interface
 
 ### GPU Requirements
 - NVIDIA GPU with RT cores
@@ -132,6 +132,18 @@ Edit `kit-app-108/start-kit-app.sh`:
     --port=49100 \
     --webrtc-port=47998
 ```
+
+## ✅ BREV Deployment Checklist
+
+Before deploying to BREV, ensure:
+
+- [ ] **Ports exposed**: 80, 1024, 49100, 47998 (critical: 1024 for WebRTC signaling)
+- [ ] **GPU instance**: T4 minimum with RT cores (avoid Crusoe, use AWS)
+- [ ] **Container image**: Uses `nvcr.io/nvidia/isaac-sim:5.0.0` (proven to work)
+- [ ] **EULA accepted**: `ACCEPT_EULA=Y` environment variable set
+- [ ] **WebRTC enabled**: `--no-window --enable omni.kit.livestream.webrtc` in startup
+- [ ] **NVIDIA runtime**: GPU capabilities properly configured in docker-compose.yml
+- [ ] **Viewer access**: Use `/viewer` endpoint after Kit App starts
 
 ## 🐛 Troubleshooting
 
