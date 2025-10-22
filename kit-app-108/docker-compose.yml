@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: Copyright (c) 2025 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+volumes:
+  shared:
+  kit-app-cache-ov:
+  kit-app-cache-pip:
+  kit-app-cache-glcache:
+  kit-app-cache-computecache:
+  kit-app-logs:
+  kit-app-data:
+  kit-app-pkg:
+  kit-app-documents:
+
+services:
+  kit-app-108:
+    container_name: kit-app-108
+    image: nvcr.io/nvidia/omniverse/kit:2025.1.0
+    restart: unless-stopped
+    runtime: nvidia
+    network_mode: "host"
+    environment:
+      - ACCEPT_EULA=Y
+      - OMNIVERSE_KIT_APP=jph2_company.jph2_usd_composer
+      - KIT_EXTENSIONS_PATH=/workspace/extensions
+    volumes:
+      - kit-app-cache-ov:/root/.cache/ov:rw
+      - kit-app-cache-pip:/root/.cache/pip:rw
+      - kit-app-cache-glcache:/root/.cache/nvidia/GLCache:rw
+      - kit-app-cache-computecache:/root/.nv/ComputeCache:rw
+      - kit-app-logs:/root/.nvidia-omniverse/logs:rw
+      - kit-app-data:/root/.local/share/ov/data:rw
+      - kit-app-pkg:/root/.local/share/ov/pkg:rw
+      - kit-app-documents:/root/Documents:rw
+      - shared:/workspace:rw
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  nginx:
+    network_mode: "host"
+    restart: unless-stopped
+
+  web-viewer:
+    container_name: web-viewer
+    build:
+      context: ./web-viewer-sample
+      network: host
+    network_mode: "host"
+    restart: unless-stopped
+    environment:
+      - ENV=brev

@@ -1,0 +1,48 @@
+# BREV Launchable Configuration for Kit App 108.1
+# This file defines the deployment settings for NVIDIA Brev
+
+launchable:
+  name: "Omniverse Kit App 108.1 USD Composer"
+  description: "Cloud-based USD authoring with Omniverse Kit App 108.1 and WebRTC streaming"
+  version: "1.0.0"
+  author: "jph2_company"
+
+compute:
+  gpu_type: "L40S"  # Recommended for RTX rendering
+  cpu_cores: 8
+  memory_gb: 32
+  disk_gb: 100
+
+container:
+  image: "nvcr.io/nvidia/omniverse/kit:2025.1.0"
+  ports:
+    - 80      # VSCode Server
+    - 49100   # Kit App WebRTC
+    - 47998   # WebRTC streaming
+    - 8080    # Additional web interface
+
+environment:
+  ACCEPT_EULA: "Y"
+  OMNIVERSE_KIT_APP: "jph2_company.jph2_usd_composer"
+  KIT_EXTENSIONS_PATH: "/workspace/extensions"
+
+setup_script: |
+  #!/bin/bash
+  echo "Setting up Kit App 108.1 Launchable..."
+  
+  # Clone the repository
+  git clone https://github.com/your-username/Kit_APP_108_1_Lnchbl.git
+  cd Kit_APP_108_1_Lnchbl/kit-app-108
+  
+  # Make startup script executable
+  chmod +x start-kit-app.sh
+  
+  # Start the containers
+  docker-compose up -d
+  
+  echo "Kit App 108.1 Launchable setup complete!"
+
+requirements:
+  - Docker
+  - NVIDIA Container Toolkit
+  - Git
