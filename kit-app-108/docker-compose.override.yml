@@ -19,6 +19,6 @@
 # file therefore for configurations that we want *for development only*.
 services:
   nginx:
-    build:
-      context: ./nginx
-      network: host
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
