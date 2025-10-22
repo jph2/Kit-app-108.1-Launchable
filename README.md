@@ -27,19 +27,44 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - Connect this GitHub repository: `https://github.com/jph2/Kit-app-108.1-Launchable`
    - **Select "With container(s)"** for runtime environment (required for Docker Compose)
 
-2. **Configure Instance**:
+2. **Configure Container**:
+   - **Choose Container Configuration**: Select "docker-compose"
+   - **Toggle**: Enable "I have an existing docker-compose.yaml file"
+   - **Enter URL**: `https://github.com/jph2/Kit-app-108.1-Launchable/blob/main/kit-app-108/docker-compose.yml`
+   - **Validate** - Should show 3 services in Services Preview:
+     - `kit-app-108` (Image: nvcr.io/nvidia/isaac-sim:5.0.0)
+     - `nginx` (Image: nginx:alpine)
+     - `web-viewer` (Image: nginx:alpine)
+   - **Click "Next"** to proceed
+
+3. **Configure Instance**:
    - **GPU Type**: T4 (minimum for RTX rendering)
    - **CPU Cores**: 4
    - **Memory**: 16GB
    - **Disk**: 100GB
 
-3. **Expose Ports**:
-   - Port 80 (VSCode Server)
-   - Port 1024 (WebRTC signaling - required for viewer)
-   - Port 49100 (Kit App WebRTC)
-   - Port 47998 (WebRTC streaming)
+4. **Configure Services**:
+   - **Jupyter Notebook**: Select "Yes, Install Jupyter on the Host (Recommended)"
+   - **Service Exposure**: Select "TCP/UDP Ports" tab
+   - **Add Required Ports**:
+     - Port 80 (VSCode Server)
+     - Port 1024 (WebRTC signaling - required for viewer)
+     - Port 49100 (Kit App WebRTC)
+     - Port 47998 (WebRTC streaming)
+   - **IP Access**: Select "Allow All IPs" (required for WebRTC streaming and web access)
 
-4. **Deploy and Access**:
+5. **Configure Compute Resources**:
+   - **GPU Selection**: Select "T4" (scroll in carousel to find it)
+   - **Expected Configuration**:
+     - 1x NVIDIA T4
+     - 16GiB VRAM
+     - 16GB RAM
+     - 4 CPUs
+     - Flexible Storage
+     - Cost: ~$0.54/hr
+   - **Why T4**: Minimum RT cores for RTX rendering, cost-effective for USD development
+
+6. **Deploy and Access**:
    - Wait for containers to start (first launch may take several minutes)
    - Access VSCode via port 80 (HTTP)
    - Run Kit App: `./start-kit-app.sh`
