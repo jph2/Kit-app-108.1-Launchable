@@ -16,8 +16,10 @@ compute:
 container:
   image: "nvcr.io/nvidia/isaac-sim:5.0.0"
   ports:
-    - 80      # VSCode Server
+    - 80      # nginx (VSCode Server proxy)
+    - 8080    # VSCode Server (internal)
     - 1024    # WebRTC signaling (required for viewer)
+    - 3000    # WebRTC viewer
     - 49100   # Kit App WebRTC
     - 47998   # WebRTC streaming
 

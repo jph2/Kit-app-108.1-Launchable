@@ -239,6 +239,42 @@ docker-compose logs
 - BREV handles authentication automatically
 - For local testing, ensure Docker is logged in to NVIDIA NGC
 
+### Isaac Sim Launchable Troubleshooting
+
+Based on the [Isaac Sim launchable repository](https://github.com/isaac-sim/isaac-launchable), use the included troubleshooting script:
+
+```bash
+# Run the comprehensive troubleshooting script
+./troubleshoot.sh
+
+# Check container status
+docker ps
+
+# Restart containers if needed
+docker-compose down
+docker-compose up -d
+
+# Check specific container logs
+docker-compose logs vscode-server
+docker-compose logs nginx
+```
+
+### Expected Container Status
+
+- ✅ **kit-app-108**: Isaac Sim with Kit 108.1
+- ✅ **kit-app-vscode**: VSCode Server on port 8080
+- ✅ **nginx**: Reverse proxy on port 80
+- ✅ **web-viewer**: WebRTC viewer on port 3000
+
+### nginx Welcome Page Issue
+
+If you see the nginx welcome page instead of VSCode:
+
+1. **Check VSCode Server**: `docker ps | grep vscode`
+2. **Restart containers**: `docker-compose down && docker-compose up -d`
+3. **Wait 2-3 minutes** for VSCode Server to initialize
+4. **Check logs**: `docker-compose logs vscode-server`
+
 ### Validation
 Run the validation script to check configuration:
 ```bash
