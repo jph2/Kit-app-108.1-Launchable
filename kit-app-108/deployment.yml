@@ -8,7 +8,8 @@ launchable:
   author: "jph2_company"
 
 compute:
-  gpu_type: "T4"  # Minimum GPU for RTX rendering
+  gpu_type: "L40S"  # Minimum GPU for port access (T4 often blocks ports)
+  cloud_provider: "AWS"  # Required for port access
   cpu_cores: 4
   memory_gb: 16
   disk_gb: 100

@@ -6,14 +6,14 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
 
 - **Isaac Sim 5.0.0**: Includes Omniverse Kit with USD Composer functionality
 - **WebRTC Streaming**: Browser-based access to the 3D viewport
-- **Cloud GPU**: T4 GPU minimum for RTX rendering
+- **Cloud GPU**: L40S GPU minimum with AWS (T4 often blocks port access)
 - **Custom Configuration**: Includes jph2_company.jph2_usd_composer setup
 - **Docker Containerized**: Complete containerization for easy deployment
 
 ## 📋 Prerequisites
 
 - NVIDIA BREV account
-- GPU instance with RT cores (T4 minimum)
+- GPU instance with RT cores (L40S minimum with AWS)
 - Docker and Docker Compose (for local testing)
 
 ## 🚀 Quick Start
@@ -38,7 +38,8 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - **Click "Next"** to proceed
 
 3. **Configure Instance**:
-   - **GPU Type**: T4 (minimum for RTX rendering)
+   - **GPU Type**: L40S (minimum for port access - T4 often blocks ports)
+   - **Cloud Provider**: AWS (required for port access)
    - **CPU Cores**: 4
    - **Memory**: 16GB
    - **Disk**: 100GB
@@ -54,15 +55,16 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - **IP Access**: Select "Allow All IPs" (required for WebRTC streaming and web access)
 
 5. **Configure Compute Resources**:
-   - **GPU Selection**: Select "T4" (scroll in carousel to find it)
+   - **GPU Selection**: Select "L40S" (scroll in carousel to find it)
+   - **Cloud Provider**: AWS (required for port access)
    - **Expected Configuration**:
-     - 1x NVIDIA T4
-     - 16GiB VRAM
+     - 1x NVIDIA L40S
+     - 48GiB VRAM
      - 16GB RAM
      - 4 CPUs
      - Flexible Storage
-     - Cost: ~$0.54/hr
-   - **Why T4**: Minimum RT cores for RTX rendering, cost-effective for USD development
+     - Cost: ~$2.50/hr
+   - **Why L40S**: Minimum GPU that allows port access, T4 often blocks ports
 
 6. **Deploy and Access**:
    - Wait for containers to start (first launch may take several minutes)
@@ -206,7 +208,7 @@ Before deploying to BREV, ensure:
 - [ ] **Runtime environment**: Select "With container(s)" (not VM Mode)
 - [ ] **Repository URL**: `https://github.com/jph2/Kit-app-108.1-Launchable`
 - [ ] **Ports exposed**: 80, 1024, 49100, 47998 (critical: 1024 for WebRTC signaling)
-- [ ] **GPU instance**: T4 minimum with RT cores (avoid Crusoe, use AWS)
+- [ ] **GPU instance**: L40S minimum with AWS (T4 often blocks port access)
 - [ ] **Container image**: Uses `nvcr.io/nvidia/isaac-sim:5.0.0` (includes Omniverse Kit)
 - [ ] **EULA accepted**: `ACCEPT_EULA=Y` environment variable set
 - [ ] **WebRTC enabled**: `--no-window --enable omni.kit.livestream.webrtc` in startup
@@ -274,6 +276,15 @@ If you see the nginx welcome page instead of VSCode:
 2. **Restart containers**: `docker-compose down && docker-compose up -d`
 3. **Wait 2-3 minutes** for VSCode Server to initialize
 4. **Check logs**: `docker-compose logs vscode-server`
+
+### Port Access Issues
+
+**Problem**: Ports not accessible or blocked
+**Solution**: 
+- **Use L40S GPU**: T4 often blocks port access
+- **Use AWS provider**: Other providers may restrict ports
+- **Check BREV settings**: Ensure "Allow All IPs" is selected
+- **Verify port exposure**: All required ports (80, 8080, 1024, 3000, 49100, 47998) must be exposed
 
 ### Validation
 Run the validation script to check configuration:
