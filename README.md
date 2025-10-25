@@ -1,5 +1,10 @@
 # Omniverse Kit App 108.1 Launchable
 
+**Version**: 1.2.0  
+**Last Updated**: 2025-10-25  
+**GitHub**: [jph2/Kit-app-108.1-Launchable](https://github.com/jph2/Kit-app-108.1-Launchable)  
+**Status**: ✅ Setup Script Added - Ready for BREV Deployment
+
 A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Omniverse Kit) with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
 ## 🚀 Features
@@ -297,6 +302,35 @@ powershell -ExecutionPolicy Bypass -File validate-config.ps1
 - [NVIDIA BREV Documentation](https://developer.nvidia.com/brev)
 - [Omniverse Kit Documentation](https://docs.omniverse.nvidia.com/kit/)
 - [WebRTC Streaming Guide](https://docs.omniverse.nvidia.com/kit/latest/streaming.html)
+
+## 📋 Version History
+
+### v1.2.0 (2025-10-25) - Setup Script Added
+- ✅ **Added setup.sh script** (like Isaac Sim launchable) to create necessary files at runtime
+- ✅ **Fixed volume mount errors** by ensuring files exist before container startup
+- ✅ **Updated deployment.yml** to run setup script before docker-compose
+- ✅ **Added comprehensive DEBUG_LOG.md** with troubleshooting guide
+- ✅ **Updated GPU requirements** to L40S + AWS (T4/L4 lacks drivers)
+- ✅ **Added versioning** to README for easy comparison
+
+### v1.1.0 (2025-10-24) - BREV Compatibility Fixes
+- ✅ **Fixed BREV build context errors** by removing build contexts
+- ✅ **Added VSCode Server container** to resolve nginx welcome page issue
+- ✅ **Updated port configuration** with all required ports (80, 1024, 49100, 47998)
+- ✅ **Added secure links documentation** for BREV access
+
+### v1.0.0 (2025-10-22) - Initial Release
+- ✅ **Created Kit App 108.1 launchable** based on Isaac Sim template
+- ✅ **Configured WebRTC streaming** for browser-based access
+- ✅ **Set up Docker Compose** with Isaac Sim 5.0.0 base image
+- ✅ **Added BREV deployment configuration**
+
+## 🔍 Version Comparison
+
+**To check if your local version matches GitHub:**
+1. **Local**: Check the "Version" field at the top of this README
+2. **GitHub**: Visit [jph2/Kit-app-108.1-Launchable](https://github.com/jph2/Kit-app-108.1-Launchable)
+3. **Compare**: Both should show "Version: 1.2.0" and "Last Updated: 2025-10-25"
 
 ## 📄 License
 
