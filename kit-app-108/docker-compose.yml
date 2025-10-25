@@ -14,7 +14,6 @@
 # limitations under the License.
 
 volumes:
-  shared:
   kit-app-cache-ov:
   kit-app-cache-pip:
   kit-app-cache-glcache:
@@ -25,7 +24,7 @@ volumes:
   kit-app-documents:
 
 services:
-  kit-app-108:
+  isaac-sim:
     container_name: kit-app-108
     image: nvcr.io/nvidia/isaac-sim:5.0.0
     restart: unless-stopped
@@ -44,7 +43,6 @@ services:
       - kit-app-data:/root/.local/share/ov/data:rw
       - kit-app-pkg:/root/.local/share/ov/pkg:rw
       - kit-app-documents:/root/Documents:rw
-      - shared:/workspace:rw
     deploy:
       resources:
         reservations:
@@ -53,43 +51,22 @@ services:
               count: all
               capabilities: [gpu]
 
-  vscode-server:
-    container_name: kit-app-vscode
-    image: codercom/code-server:latest
-    restart: unless-stopped
-    network_mode: "host"
-    environment:
-      - PASSWORD=brev123
-      - USER=ubuntu
-    volumes:
-      - shared:/home/ubuntu/workspace:rw
-      - kit-app-documents:/home/ubuntu/Documents:rw
-    command: >
-      --bind-addr 0.0.0.0:8080
-      --auth password
-      --disable-telemetry
-      /home/ubuntu/workspace
-    depends_on:
-      - kit-app-108
-
   nginx:
-    image: nginx:alpine
+    container_name: kit-app-nginx
     network_mode: "host"
     restart: unless-stopped
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
-      - vscode-server
-      - kit-app-108
+      - isaac-sim
+      - web-viewer
 
   web-viewer:
     container_name: web-viewer
-    image: nginx:alpine
+    build:
+      context: ./web-viewer-sample
+      network: host
     network_mode: "host"
     restart: unless-stopped
-    volumes:
-      - ./web-viewer-sample:/usr/share/nginx/html:ro
     environment:
       - ENV=brev
     depends_on:
-      - kit-app-108
+      - isaac-sim

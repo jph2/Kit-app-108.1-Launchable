@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# (1) When using `docker-compose up`, docker-compose looks for a
+# (1) When using `docker compose up`, docker compose looks for a
 # file by the name of `docker-compose.override.yml` (this file) and
 # if it exists, will merge it with `docker-compose.yml`. We use this
 # file therefore for configurations that we want *for development only*.
 services:
   nginx:
-    image: nginx:alpine
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    build:
+      context: ./nginx
+      network: host

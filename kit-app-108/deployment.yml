@@ -4,7 +4,7 @@
 launchable:
   name: "Omniverse Kit App 108.1 USD Composer"
   description: "Cloud-based USD authoring with Omniverse Kit App 108.1 and WebRTC streaming"
-  version: "1.0.0"
+  version: "2.0.0"
   author: "jph2_company"
 
 compute:
@@ -17,11 +17,9 @@ compute:
 container:
   image: "nvcr.io/nvidia/isaac-sim:5.0.0"
   ports:
-    - 80      # nginx (VSCode Server proxy)
-    - 8080    # VSCode Server (internal)
-    - 1024    # WebRTC signaling (required for viewer)
-    - 3000    # WebRTC viewer
-    - 49100   # Kit App WebRTC
+    - 80      # HTTPS/TLS proxy (also terminates HTTP)
+    - 443     # HTTPS
+    - 49100   # Kit App WebRTC signaling
     - 47998   # WebRTC streaming
 
 environment:
@@ -31,20 +29,10 @@ environment:
 
 setup_script: |
   #!/bin/bash
-  echo "Setting up Kit App 108.1 Launchable..."
-  
-  # Clone the repository
+  set -euo pipefail
   git clone https://github.com/jph2/Kit-app-108.1-Launchable.git
   cd Kit-app-108.1-Launchable/kit-app-108
-  
-  # Run setup script to create necessary files
-  chmod +x setup.sh
-  ./setup.sh
-  
-  # Start the containers
-  docker-compose up -d
-  
-  echo "Kit App 108.1 Launchable setup complete!"
+  docker compose up -d
 
 requirements:
   - Docker

@@ -1,20 +1,26 @@
 #!/bin/bash
+set -euo pipefail
 
 # Kit App 108.1 Launchable Startup Script
-# This script launches Omniverse Kit App 108.1 with WebRTC streaming enabled
+# Launches Omniverse Kit App 108.1 inside the running Isaac Sim container with WebRTC streaming enabled.
 
-echo "Starting Omniverse Kit App 108.1 with WebRTC streaming..."
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+cd "${SCRIPT_DIR}"
 
-# Set environment variables
-export ACCEPT_EULA=Y
-export OMNIVERSE_KIT_APP=jph2_company.jph2_usd_composer
+OMNIVERSE_KIT_APP=${OMNIVERSE_KIT_APP:-jph2_company.jph2_usd_composer}
 
-# Launch Kit App with streaming enabled
-# Isaac Sim includes Omniverse Kit, so we can run Kit Apps directly
-./isaaclab/_isaac_sim/isaac-sim.sh \
+echo "Starting Omniverse Kit App 108.1 (app: ${OMNIVERSE_KIT_APP})..."
+
+docker compose up -d isaac-sim
+
+docker compose exec isaac-sim bash -lc "\
+  export OMNIVERSE_KIT_APP=${OMNIVERSE_KIT_APP} && \
+  cd /isaac-sim && \
+  ./isaac-sim.sh \
+    --allow-root \
     --no-window \
     --enable omni.kit.livestream.webrtc \
-    --port=49100 \
-    --webrtc-port=47998
+    --/app/livestream/websocket_port=49100 \
+    --webrtc-port=47998"
 
-echo "Kit App 108.1 startup complete. Access via WebRTC streaming."
+echo "Kit App 108.1 is launching. Use the WebRTC viewer to connect."
