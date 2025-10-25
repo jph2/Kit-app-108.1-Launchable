@@ -34,11 +34,12 @@ setup_script: |
   echo "Setting up Kit App 108.1 Launchable..."
   
   # Clone the repository
-  git clone https://github.com/your-username/Kit_APP_108_1_Lnchbl.git
-  cd Kit_APP_108_1_Lnchbl/kit-app-108
+  git clone https://github.com/jph2/Kit-app-108.1-Launchable.git
+  cd Kit-app-108.1-Launchable/kit-app-108
   
-  # Make startup script executable
-  chmod +x start-kit-app.sh
+  # Run setup script to create necessary files
+  chmod +x setup.sh
+  ./setup.sh
   
   # Start the containers
   docker-compose up -d

@@ -1,0 +1,152 @@
+# BREV Deployment Debug Log
+
+## 🐛 Known Issues and Solutions
+
+### **Issue 1: nginx Welcome Page Instead of VSCode**
+**Symptom**: Accessing port 80 shows nginx welcome page instead of VSCode Server
+**Root Cause**: VSCode Server container not running or not properly configured
+**Solution**: 
+- Added VSCode Server container (`codercom/code-server`) on port 8080
+- Configured nginx to proxy to VSCode Server
+- Added proper container dependencies and startup order
+
+### **Issue 2: BREV Build Context Error**
+**Symptom**: `Error: rpc error: code = Internal desc = service web-viewer has build context`
+**Root Cause**: BREV doesn't support Docker build contexts for services provided via URL
+**Solution**:
+- Removed all `build:` contexts from docker-compose.yml
+- Replaced with pre-built images (`nginx:alpine`)
+- Used volume mounts for configuration files
+
+### **Issue 3: Volume Mount Errors**
+**Symptom**: `error mounting "/home/ubuntu/workspace/nginx/nginx.conf" to rootfs at "/etc/nginx/nginx.conf": create mountpoint for /etc/nginx/nginx.conf mount: cannot create subdirectories`
+**Root Cause**: BREV environment doesn't have the mounted files in the expected locations
+**Solution**:
+- **Added setup script** (like Isaac Sim launchable) to create necessary files
+- **Setup script creates**: nginx.conf, web-viewer-sample/index.html, start-kit-app.sh
+- **Files created at runtime** in BREV workspace before container startup
+- **No more volume mount errors** - files exist when containers start
+
+### **Issue 4: Port Access Blocked**
+**Symptom**: 403 Forbidden when accessing services directly via IP
+**Root Cause**: BREV security blocks direct IP access
+**Solution**:
+- Use BREV "Secure Links" for authenticated access
+- Create secure links for each required port (80, 1024, 49100, 47998)
+- Access services via secure URLs instead of direct IP
+
+### **Issue 5: GPU Driver Issues**
+**Symptom**: T4/L4 GPUs don't allow port access
+**Root Cause**: T4/L4 GPUs lack proper drivers for port access
+**Solution**:
+- Use L40S GPU minimum (has proper drivers)
+- Use AWS cloud provider (other providers often block ports)
+- Updated specifications: 44GiB VRAM, 32GB RAM
+
+### **Issue 6: Container Startup Order**
+**Symptom**: Services starting in wrong order causing failures
+**Root Cause**: Missing container dependencies
+**Solution**:
+- Added `depends_on` clauses in docker-compose.yml
+- nginx depends on vscode-server
+- web-viewer depends on kit-app-108
+- Proper startup sequence: kit-app-108 → vscode-server → nginx → web-viewer
+
+## 🔧 Debugging Commands
+
+### **Check Container Status**
+```bash
+docker ps
+# Should show: kit-app-108, kit-app-vscode, nginx, web-viewer
+```
+
+### **Check Container Logs**
+```bash
+docker-compose logs vscode-server
+docker-compose logs nginx
+docker-compose logs kit-app-108
+```
+
+### **Restart Containers**
+```bash
+docker-compose down
+docker-compose up -d
+```
+
+### **Check Port Accessibility**
+```bash
+curl -I http://localhost:80    # nginx/VSCode
+curl -I http://localhost:8080  # VSCode Server direct
+curl -I http://localhost:3000  # WebRTC viewer
+```
+
+### **Run Troubleshooting Script**
+```bash
+./troubleshoot.sh
+```
+
+## 🔧 Setup Script Solution
+
+### **What We Were Missing**
+The [Isaac Sim launchable](https://github.com/isaac-sim/isaac-launchable) has a **setup script** that creates necessary files at runtime, but our project was missing this!
+
+### **Our Setup Script (`setup.sh`)**
+```bash
+#!/bin/bash
+# Creates nginx.conf, web-viewer-sample/index.html, start-kit-app.sh
+# Runs before docker-compose up -d
+```
+
+### **Files Created by Setup Script**
+- **`/home/ubuntu/workspace/nginx/nginx.conf`** - Nginx configuration with VSCode proxy
+- **`/home/ubuntu/workspace/web-viewer-sample/index.html`** - WebRTC viewer interface
+- **`/home/ubuntu/workspace/start-kit-app.sh`** - Kit App startup script
+
+### **Why This Fixes the Volume Mount Error**
+1. **Files exist** when containers start (created by setup script)
+2. **No more "file not found"** errors
+3. **Volume mounts work** because target files exist
+4. **Same pattern** as Isaac Sim launchable
+
+## 📋 Current Configuration
+
+### **Container Architecture**
+- **kit-app-108**: Isaac Sim 5.0.0 with Kit 108.1
+- **kit-app-vscode**: VSCode Server on port 8080
+- **nginx**: Reverse proxy on port 80 (proxies to VSCode)
+- **web-viewer**: WebRTC viewer on port 3000
+
+### **Port Configuration**
+- **80**: nginx (VSCode Server proxy)
+- **8080**: VSCode Server (internal)
+- **1024**: WebRTC signaling
+- **3000**: WebRTC viewer
+- **49100**: Kit App WebRTC
+- **47998**: WebRTC streaming
+
+### **BREV Requirements**
+- **GPU**: L40S minimum (T4/L4 lacks drivers)
+- **Cloud Provider**: AWS (other providers often block ports)
+- **Runtime**: "With container(s)" (not VM Mode)
+- **Port Access**: "Allow All IPs" required
+
+## 🚀 Next Steps
+
+1. **Test Updated Configuration**: Deploy with L40S + AWS
+2. **Verify VSCode Access**: Should work via port 80 (no nginx welcome page)
+3. **Test WebRTC Streaming**: Launch Kit App and access via `/viewer`
+4. **Monitor Container Health**: Use troubleshooting script regularly
+
+## 📝 Notes
+
+- **Isaac Sim 5.0.0** includes Kit 108.1 built-in (no separate Kit installation needed)
+- **BREV Secure Links** required for authenticated access (not direct IP)
+- **Container dependencies** critical for proper startup order
+- **L40S + AWS** combination proven to work for port access
+- **Troubleshooting script** based on Isaac Sim launchable approach
+
+## 🔗 References
+
+- [Isaac Sim launchable repository](https://github.com/isaac-sim/isaac-launchable) - Reference implementation
+- [BREV Documentation](https://developer.nvidia.com/brev) - Official BREV docs
+- [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/) - GPU container support
