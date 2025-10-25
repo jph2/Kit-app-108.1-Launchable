@@ -8,10 +8,10 @@ launchable:
   author: "jph2_company"
 
 compute:
-  gpu_type: "L40S"  # Minimum GPU for port access (T4 often blocks ports)
-  cloud_provider: "AWS"  # Required for port access
+  gpu_type: "L40S"  # Minimum GPU for port access (T4/L4 lacks drivers)
+  cloud_provider: "AWS"  # Required for port access, other providers often block ports
   cpu_cores: 4
-  memory_gb: 16
+  memory_gb: 32
   disk_gb: 100
 
 container:
