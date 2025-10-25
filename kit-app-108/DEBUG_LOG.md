@@ -108,6 +108,33 @@ The [Isaac Sim launchable](https://github.com/isaac-sim/isaac-launchable) has a 
 3. **Volume mounts work** because target files exist
 4. **Same pattern** as Isaac Sim launchable
 
+## 🎯 Isaac Sim Pattern Implementation (v1.3.0)
+
+### **The Real Solution**
+After studying the [Isaac Sim launchable](https://github.com/isaac-sim/isaac-launchable), we discovered they use a **simple 3-line setup script**:
+
+```bash
+#!/bin/bash
+git clone https://github.com/isaac-sim/isaac-launchable
+cd isaac-launchable/isaac-lab
+docker compose up -d
+```
+
+### **Why This Works Better**
+1. **Simple 3 lines** - Fits within BREV's character limits
+2. **All files in repository** - No runtime file creation needed
+3. **Docker Compose handles everything** - Containers, volumes, networking
+4. **Proven pattern** - Same approach as working Isaac Sim launchable
+5. **No volume mount errors** - Files exist because they're in the repo
+
+### **Our Updated Approach**
+```bash
+#!/bin/bash
+git clone https://github.com/jph2/Kit-app-108.1-Launchable.git
+cd Kit-app-108.1-Launchable/kit-app-108
+docker-compose up -d
+```
+
 ## 📋 Current Configuration
 
 ### **Container Architecture**

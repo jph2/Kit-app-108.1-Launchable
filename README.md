@@ -1,9 +1,9 @@
 # Omniverse Kit App 108.1 Launchable
 
-**Version**: 1.2.0  
+**Version**: 1.3.0  
 **Last Updated**: 2025-10-25  
 **GitHub**: [jph2/Kit-app-108.1-Launchable](https://github.com/jph2/Kit-app-108.1-Launchable)  
-**Status**: ✅ Setup Script Added - Ready for BREV Deployment
+**Status**: ✅ Isaac Sim Pattern - Ready for BREV Deployment
 
 A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Omniverse Kit) with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
@@ -28,29 +28,23 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
 1. **Create BREV Launchable**:
    - Go to [brev.nvidia.com](https://brev.nvidia.com)
    - Select "Create Launchable"
-   - Choose "I have code files" option
-   - Connect this GitHub repository: `https://github.com/jph2/Kit-app-108.1-Launchable`
-   - **Select "With container(s)"** for runtime environment (required for Docker Compose)
+   - Choose **"I don't have any code files"** option
+   - Select **"VM Mode - Basic VM with Python installed"**
+   - Click "Next"
 
-2. **Configure Container**:
-   - **Choose Container Configuration**: Select "docker-compose"
-   - **Toggle**: Enable "I have an existing docker-compose.yaml file"
-   - **Enter URL**: `https://github.com/jph2/Kit-app-108.1-Launchable/blob/main/kit-app-108/docker-compose.yml`
-   - **Validate** - Should show 3 services in Services Preview:
-     - `kit-app-108` (Image: nvcr.io/nvidia/isaac-sim:5.0.0)
-     - `nginx` (Image: nginx:alpine)
-     - `web-viewer` (Image: nginx:alpine)
-   - **Click "Next"** to proceed
+2. **Configure Setup Script**:
+   - **Paste Script**: Copy and paste this simple 3-line script (Isaac Sim pattern):
+   ```bash
+   #!/bin/bash
+   git clone https://github.com/jph2/Kit-app-108.1-Launchable.git
+   cd Kit-app-108.1-Launchable/kit-app-108
+   docker-compose up -d
+   ```
+   - **What it does**: Clones repository and starts containers (all config files are already in repo)
+   - Click "Next"
 
-3. **Configure Instance**:
-   - **GPU Type**: L40S (minimum for port access - T4 often blocks ports)
-   - **Cloud Provider**: AWS (required for port access)
-   - **CPU Cores**: 4
-   - **Memory**: 16GB
-   - **Disk**: 100GB
-
-4. **Configure Services**:
-   - **Jupyter Notebook**: Select "Yes, Install Jupyter on the Host (Recommended)"
+3. **Configure Services**:
+   - **Jupyter Notebook**: Select "No, I don't want Jupyter"
    - **Service Exposure**: Select "TCP/UDP Ports" tab
    - **Add Required Ports**:
      - Port 80 (VSCode Server)
@@ -58,8 +52,9 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
      - Port 49100 (Kit App WebRTC)
      - Port 47998 (WebRTC streaming)
    - **IP Access**: Select "Allow All IPs" (required for WebRTC streaming and web access)
+   - Click "Next"
 
-5. **Configure Compute Resources**:
+4. **Configure Compute Resources**:
    - **GPU Selection**: Select "L40S" (scroll in carousel to find it)
    - **Cloud Provider**: AWS (required for port access), other providers often block ports
    - **Expected Configuration**:
@@ -71,8 +66,8 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
      - Cost: ~$2.50/hr
    - **Why L40S**: Minimum GPU that allows port access, T4/L4 lacks drivers
 
-6. **Deploy and Access**:
-   - Wait for containers to start (first launch may take several minutes)
+5. **Deploy and Access**:
+   - Wait for setup script to complete (first launch may take several minutes)
    - **Set up Secure Links** (see section below)
    - Access VSCode via secure link
    - Run Kit App: `./start-kit-app.sh`
@@ -210,22 +205,22 @@ Edit `kit-app-108/start-kit-app.sh`:
 
 Before deploying to BREV, ensure:
 
-- [ ] **Runtime environment**: Select "With container(s)" (not VM Mode)
-- [ ] **Repository URL**: `https://github.com/jph2/Kit-app-108.1-Launchable`
+- [ ] **Runtime environment**: Select "VM Mode - Basic VM with Python installed"
+- [ ] **Setup script**: Use simple 3-line script (Isaac Sim pattern)
 - [ ] **Ports exposed**: 80, 1024, 49100, 47998 (critical: 1024 for WebRTC signaling)
 - [ ] **GPU instance**: L40S minimum with AWS (T4/L4 lacks drivers)
-- [ ] **Container image**: Uses `nvcr.io/nvidia/isaac-sim:5.0.0` (includes Omniverse Kit)
-- [ ] **EULA accepted**: `ACCEPT_EULA=Y` environment variable set
-- [ ] **WebRTC enabled**: `--no-window --enable omni.kit.livestream.webrtc` in startup
-- [ ] **NVIDIA runtime**: GPU capabilities properly configured in docker-compose.yml
-- [ ] **Viewer access**: Use `/viewer` endpoint after Kit App starts
+- [ ] **Jupyter Notebook**: Select "No, I don't want Jupyter"
+- [ ] **IP Access**: Select "Allow All IPs" for WebRTC streaming
+- [ ] **All config files**: Already in repository (nginx.conf, web-viewer-sample, etc.)
+- [ ] **Script clones**: Repository and starts docker-compose
+- [ ] **No file creation**: All files pre-existing in repo
 
-### Why "With container(s)" is Required:
-- **Docker Compose**: Your setup uses `docker-compose.yml` with multiple services
-- **Isaac Sim container**: Needs `nvcr.io/nvidia/isaac-sim:5.0.0` container runtime
-- **GPU access**: Requires NVIDIA Container Toolkit for GPU-accelerated rendering
-- **Multi-service architecture**: nginx + web-viewer + Kit App work together
-- **VM Mode limitation**: Only provides "Basic VM with Python" - insufficient for this setup
+### Why Isaac Sim Pattern Works:
+- **Simple 3-line script**: Fits within BREV's character limits
+- **All files in repository**: No need to create files at runtime
+- **Docker Compose handles everything**: Containers, volumes, networking
+- **Proven pattern**: Same approach used by Isaac Sim launchable repository
+- **BREV compatibility**: Avoids build context and volume mount issues
 
 ## 🐛 Troubleshooting
 
@@ -304,6 +299,13 @@ powershell -ExecutionPolicy Bypass -File validate-config.ps1
 - [WebRTC Streaming Guide](https://docs.omniverse.nvidia.com/kit/latest/streaming.html)
 
 ## 📋 Version History
+
+### v1.3.0 (2025-10-25) - Isaac Sim Pattern Implementation
+- ✅ **Simplified setup script** to 3 lines (Isaac Sim pattern)
+- ✅ **All config files in repository** (no runtime file creation needed)
+- ✅ **Updated README** with Isaac Sim approach
+- ✅ **Fixed BREV character limits** by using simple script
+- ✅ **Proven pattern** from working Isaac Sim launchable
 
 ### v1.2.0 (2025-10-25) - Setup Script Added
 - ✅ **Added setup.sh script** (like Isaac Sim launchable) to create necessary files at runtime
