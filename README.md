@@ -49,10 +49,11 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - **Jupyter Notebook**: Select "No, I don't want Jupyter"
    - **Service Exposure**: Select "TCP/UDP Ports" tab
    - **Add Required Ports**:
-     - Port 80 (VSCode Server)
+     - Port 80 (VSCode Server + /viewer endpoint)
      - Port 1024 (WebRTC signaling - required for viewer)
      - Port 49100 (Kit App WebRTC)
      - Port 47998 (WebRTC streaming)
+     - Port 5173 (Web-viewer internal - Vite dev server)
    - **IP Access**: Select "Allow All IPs" (required for WebRTC streaming and web access)
    - Click "Next"
 
