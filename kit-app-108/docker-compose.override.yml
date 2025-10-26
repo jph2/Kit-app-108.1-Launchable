@@ -18,3 +18,15 @@
 # if it exists, will merge it with `docker-compose.yml`. We use this
 # file therefore for configurations that we want *for development only*.
 # For BREV deployment, all services use build contexts (no overrides needed)
+
+services:
+  kit-app-108:
+    entrypoint: ["/bin/bash", "-c"]
+    command: >
+      /isaac-sim/runapp.sh
+      --no-window
+      --enable omni.kit.livestream.webrtc
+      --/app/livestream/port=49100
+      --/app/livestream/websocket/port=8011
+      --/app/livestream/websocket/framerate=60
+      --/app/livestream/websocket/encoder=nvenc
