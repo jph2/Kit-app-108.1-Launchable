@@ -150,6 +150,12 @@ Changed `docker-compose.yml` to use `build:` contexts instead of `image:` + volu
 - nginx: Uses `build: context: ./nginx` → builds from Dockerfile
 - web-viewer: Uses `build: context: ./web-viewer-sample` → builds from Dockerfile
 
+### **CRITICAL: docker compose vs docker-compose**
+**Isaac Sim uses**: `docker compose up -d` (with **SPACE**)  
+**We were using**: `docker-compose up -d` (with **DASH**)
+
+Modern Docker (v2+) uses `docker compose` as a plugin command. BREV VMs have modern Docker installed, so the script MUST use `docker compose` (space) not `docker-compose` (dash).
+
 ## 🎯 Isaac Sim Pattern Implementation (v1.3.0)
 
 ### **The Real Solution**

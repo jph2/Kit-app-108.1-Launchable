@@ -34,13 +34,14 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - Click "Next"
 
 2. **Configure Setup Script**:
-   - **Paste Script**: Copy and paste this simple 3-line script (Isaac Sim pattern):
+   - **Paste Script**: Copy and paste this EXACT script (note: `docker compose` with SPACE):
    ```bash
    #!/bin/bash
    git clone -b Work_A https://github.com/jph2/Kit-app-108.1-Launchable.git
    cd Kit-app-108.1-Launchable/kit-app-108
-   docker-compose up -d
+   docker compose up -d
    ```
+   - **CRITICAL**: Use `docker compose` (with space) NOT `docker-compose` (with dash)
    - **What it does**: Clones `Work_A` branch and starts containers (all config files are already in repo)
    - Click "Next"
 
