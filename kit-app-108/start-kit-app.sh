@@ -11,7 +11,7 @@ export OMNIVERSE_KIT_APP=jph2_company.jph2_usd_composer
 
 # Launch Kit App with streaming enabled
 # Isaac Sim includes Omniverse Kit, so we can run Kit Apps directly
-./isaaclab/_isaac_sim/isaac-sim.sh \
+/isaac-sim/runapp.sh \
     --no-window \
     --enable omni.kit.livestream.webrtc \
     --port=49100 \
