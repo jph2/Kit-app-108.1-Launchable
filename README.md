@@ -17,6 +17,7 @@ The project includes:
 - a Visual Studio Code container
 - Isaac Lab pre-installed
 - Isaac Sim pre-installed
+- Omniverse Composer available through the same streaming interface
 - an Omniverse Kit App Streaming client, based on the [web-viewer-sample](https://github.com/NVIDIA-Omniverse/web-viewer-sample) project.
 
 ## Quickstart Guide
@@ -58,6 +59,20 @@ Note how this is similar to the workstation command for launching Isaac Sim, but
 - Example: if VSCode is at `ec2.something.amazonaws.com`, then the Isaac Sim UI can be accessed at `ec2.something.amazonaws.com/viewer`
 5. After a few seconds you should see the UI in the viewer tab. The first launch may take much longer as shaders are cached.
 6. On subsequent relaunches, simply refresh this tab to see the UI.
+
+
+### Running Omniverse Composer - Detailed Guide
+
+1. Launch Omniverse Composer with streaming enabled by running:
+```
+./isaaclab/_isaac_sim/kit/kit.sh usdcomposer.kit --no-window --enable omni.kit.livestream.webrtc
+```
+This uses the same Kit streaming flags as Isaac Sim so the viewport can be viewed remotely.
+
+2. Wait for the application to report that it is ready.
+3. Open a new browser tab and navigate to the same address used for Visual Studio Code, replacing the end with `/viewer`.
+- Example: if VSCode is at `ec2.something.amazonaws.com`, then the Composer UI can be accessed at `ec2.something.amazonaws.com/viewer`
+4. After the shaders warm up on first launch, subsequent restarts will stream almost immediately—refresh the viewer tab whenever you relaunch Composer.
 
 
 ### Running Isaac Lab Commands - Detailed Guide

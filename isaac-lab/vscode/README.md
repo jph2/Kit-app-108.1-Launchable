@@ -26,5 +26,15 @@ You can run the streaming Isaac Sim application at anytime with the following co
 Then, in a separate browser window, open `https://{your instance's address}/viewer`.
 
 For example, if this is run on a local computer: `127.0.0.1/viewer`
-If this is run on an AWS instance, the address may be more like: 
+If this is run on an AWS instance, the address may be more like:
 `http://ec2-00-00-000-000.compute-1.amazonaws.com/viewer`
+
+## Running Omniverse Composer
+
+To open Omniverse Composer with streaming enabled, run:
+
+```console
+./isaaclab/_isaac_sim/kit/kit.sh usdcomposer.kit --no-window --enable omni.kit.livestream.webrtc
+```
+
+Once the application reports it is ready, view the UI at `https://{your instance's address}/viewer` just like the Isaac Sim stream.
