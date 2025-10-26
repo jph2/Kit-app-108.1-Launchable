@@ -108,6 +108,48 @@ The [Isaac Sim launchable](https://github.com/isaac-sim/isaac-launchable) has a 
 3. **Volume mounts work** because target files exist
 4. **Same pattern** as Isaac Sim launchable
 
+## 🔥 BUILD CONTEXTS vs VOLUME MOUNTS (v1.4.0) - ROOT CAUSE IDENTIFIED
+
+### **THE CRITICAL DIFFERENCE**
+
+After line-by-line analysis of Isaac Sim launchable, I discovered the fundamental difference:
+
+**Isaac Sim Approach:**
+```yaml
+services:
+  nginx:
+    build:
+      context: ./nginx  # Builds from Dockerfile
+      network: host
+  # Dockerfile copies nginx.conf into image at BUILD time
+```
+
+**Our Previous Approach:**
+```yaml
+services:
+  nginx:
+    image: nginx:alpine  # Pre-built image
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro  # Runtime mount
+```
+
+### **Why Volume Mounts Failed**
+1. **Setup script clones repository** to `/home/ubuntu/Kit-app-108.1-Launchable/kit-app-108`
+2. **docker-compose looks for** `./nginx/nginx.conf` relative to working directory
+3. **Volume mount tries to mount** the file from the filesystem
+4. **If files are missing or inaccessible** → container fails to start
+
+###  **Why Build Contexts Work**
+1. **Dockerfile COPIES files into image** at build time: `COPY nginx.conf /etc/nginx/nginx.conf`
+2. **Config files are BAKED INTO the image** - no external dependencies
+3. **No volume mount failures** - everything is self-contained
+4. **Works identically locally and on BREV** - no environment differences
+
+### **The Fix**
+Changed `docker-compose.yml` to use `build:` contexts instead of `image:` + volume mounts:
+- nginx: Uses `build: context: ./nginx` → builds from Dockerfile
+- web-viewer: Uses `build: context: ./web-viewer-sample` → builds from Dockerfile
+
 ## 🎯 Isaac Sim Pattern Implementation (v1.3.0)
 
 ### **The Real Solution**

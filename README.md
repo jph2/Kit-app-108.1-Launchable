@@ -1,9 +1,10 @@
 # Omniverse Kit App 108.1 Launchable
 
-**Version**: 1.3.0  
-**Last Updated**: 2025-10-25  
+**Version**: 1.4.0  
+**Last Updated**: 2025-10-26  
 **GitHub**: [jph2/Kit-app-108.1-Launchable](https://github.com/jph2/Kit-app-108.1-Launchable)  
-**Status**: ✅ Isaac Sim Pattern - Ready for BREV Deployment
+**Branch**: Work_A  
+**Status**: ✅ Build Contexts Pattern - Ready for BREV Deployment
 
 A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Omniverse Kit) with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
@@ -36,11 +37,11 @@ A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Om
    - **Paste Script**: Copy and paste this simple 3-line script (Isaac Sim pattern):
    ```bash
    #!/bin/bash
-   git clone https://github.com/jph2/Kit-app-108.1-Launchable.git
+   git clone -b Work_A https://github.com/jph2/Kit-app-108.1-Launchable.git
    cd Kit-app-108.1-Launchable/kit-app-108
    docker-compose up -d
    ```
-   - **What it does**: Clones repository and starts containers (all config files are already in repo)
+   - **What it does**: Clones `Work_A` branch and starts containers (all config files are already in repo)
    - Click "Next"
 
 3. **Configure Services**:
@@ -299,6 +300,14 @@ powershell -ExecutionPolicy Bypass -File validate-config.ps1
 - [WebRTC Streaming Guide](https://docs.omniverse.nvidia.com/kit/latest/streaming.html)
 
 ## 📋 Version History
+
+### v1.4.0 (2025-10-26) - Build Contexts Pattern (CRITICAL FIX)
+- ✅ **Root cause identified**: Volume mounts vs build contexts
+- ✅ **Changed nginx to use `build:` context** instead of volume mounts
+- ✅ **Changed web-viewer to use `build:` context** instead of volume mounts
+- ✅ **Config files baked into images** at build time (like Isaac Sim)
+- ✅ **No volume mount dependencies** - containers are self-contained
+- ✅ **Matches Isaac Sim pattern exactly** - proven to work on BREV
 
 ### v1.3.0 (2025-10-25) - Isaac Sim Pattern Implementation
 - ✅ **Simplified setup script** to 3 lines (Isaac Sim pattern)
