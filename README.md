@@ -1,10 +1,10 @@
 # Omniverse Kit App 108.1 Launchable
 
-**Version**: 1.4.0  
+**Version**: 1.4.1  
 **Last Updated**: 2025-10-26  
 **GitHub**: [jph2/Kit-app-108.1-Launchable](https://github.com/jph2/Kit-app-108.1-Launchable)  
 **Branch**: Work_A  
-**Status**: ✅ Build Contexts Pattern - Ready for BREV Deployment
+**Status**: ✅ nginx Routing Fixed - Ready for BREV Deployment
 
 A cloud-based USD authoring environment using Isaac Sim 5.0.0 (which includes Omniverse Kit) with WebRTC streaming capabilities, designed for NVIDIA BREV deployment.
 
@@ -302,6 +302,13 @@ powershell -ExecutionPolicy Bypass -File validate-config.ps1
 - [WebRTC Streaming Guide](https://docs.omniverse.nvidia.com/kit/latest/streaming.html)
 
 ## 📋 Version History
+
+### v1.4.1 (2025-10-26) - nginx Routing and Launch Path Fixes
+- ✅ **Fixed nginx /viewer routing**: Changed to `proxy_pass http://localhost:5173/viewer;`
+- ✅ **Fixed start-kit-app.sh path**: Changed to `/isaac-sim/runapp.sh`
+- ✅ **Removed unnecessary upstream**: Simplified nginx configuration
+- ✅ **Verified all files**: Comprehensive pre-deployment check completed
+- ✅ **Matches Isaac Sim pattern**: Exact nginx routing configuration
 
 ### v1.4.0 (2025-10-26) - Build Contexts Pattern (CRITICAL FIX)
 - ✅ **Root cause identified**: Volume mounts vs build contexts
